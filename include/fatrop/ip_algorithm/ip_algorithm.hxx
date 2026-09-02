@@ -77,8 +77,15 @@ namespace fatrop
             mu_update_->update_barrier_parameter();
             {
                 LinsolReturnFlag sd_ret = search_dir_->compute_search_dir();
-                if (sd_ret == LinsolReturnFlag::UNKNOWN || sd_ret == LinsolReturnFlag::NAN_SOLUTION)
+                if (sd_ret == LinsolReturnFlag::UNKNOWN ||
+                    sd_ret == LinsolReturnFlag::NAN_SOLUTION ||
+                    sd_ret == LinsolReturnFlag::INDEFINITE ||
+                    sd_ret == LinsolReturnFlag::NOFULL_RANK)
+                {
+                    // this iteration's line is already out; just stop the clock and report
+                    ip_data_->timing_statistics().full_algorithm.pause();
                     return IpSolverReturnFlag::ErrorInStepComputation;
+                }
             }
             bool success = linesearch_->find_acceptable_trial_point();
             if(!success) return IpSolverReturnFlag::LineSearchFailed;
