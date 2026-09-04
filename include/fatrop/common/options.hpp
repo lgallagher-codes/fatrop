@@ -256,6 +256,14 @@ namespace fatrop
         }
 
         /**
+         * @brief Set the option value from a C-string.
+         */
+        void set_option(const std::string &option_name, const char *value)
+        {
+            set_option(option_name, std::string(value));
+        }
+
+        /**
          * @brief Set the value of a registered option.
          *
          * This method calls all registered setters for the given option name.
@@ -266,20 +274,6 @@ namespace fatrop
          * @throws std::runtime_error if the option is not found or if there's an error setting the
          * value.
          */
-        /**
-         * @brief Overload routing C-string values to the std::string path.
-         *
-         * Without this, OptionVariant construction from a string literal selects the bool
-         * alternative under C++17 (pointer-to-bool is a standard conversion, const char* to
-         * std::string is user-defined), so string options fail with a type error and
-         * "yes"/"no" bool values collapse to pointer truthiness. C++20 (P0608) fixes the
-         * variant behavior, but this keeps set_option correct under either standard.
-         */
-        void set_option(const std::string &option_name, const char *value)
-        {
-            set_option(option_name, std::string(value));
-        }
-
         template <typename ValueType>
         void set_option(const std::string &option_name, const ValueType &value)
         {
