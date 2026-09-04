@@ -27,8 +27,7 @@ void PdSolverOrig<OcpType>::reduce(LinearSystem<PdSystemType<OcpType>> &ls)
 {
     VecRealView gi =
         ls.rhs_g_.block(ls.info_.number_of_slack_variables, ls.info_.offset_g_eq_slack);
-    // Cache the elementwise reciprocals of the bound slacks: they are reused below and in
-    // dereduce(), and elementwise division is the most expensive vector operation here.
+    // Cache the bound-slack reciprocals for reuse here and in dereduce().
     sl_inverse_ = 1. / ls.Sl_i_;
     su_inverse_ = 1. / ls.Su_i_;
     sigma_inverse_ =
