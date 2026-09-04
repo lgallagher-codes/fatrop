@@ -322,11 +322,8 @@ namespace fatrop
         Scalar dual_infeasibility_s_linf = dual_infeasibility_s_inf();
         Scalar dual_infeasibility_linf =
             std::max(dual_infeasibility_x_linf, dual_infeasibility_s_linf);
-        // Fused relaxed-complementarity infinity norm: e_mu is evaluated several times per
-        // iteration (convergence checks and the barrier update loop), and materializing the two
-        // relaxed-complementarity temporaries plus separate norm passes on every call is the
-        // dominant remaining cost here. complementarity_l()/complementarity_u() are cached per
-        // iterate, so each call is two read-only passes.
+        // Compute the norm from cached complementarity vectors to avoid materializing relaxed
+        // temporaries.
         const VecRealView &compl_l = complementarity_l();
         const VecRealView &compl_u = complementarity_u();
         Scalar complementarity_linf = 0.;
