@@ -77,13 +77,7 @@ namespace fatrop
         void set_min_it_ref(const Index &value) { min_it_ref = value; }
         void set_max_it_ref(const Index &value) { max_it_ref = value; }
         void set_iref_tol(const Scalar &value) { tol_ = value; }
-        /**
-         * @brief Register the iterative-refinement tuning options.
-         *
-         * Exposes min_it_ref / max_it_ref / iref_tol through the OptionRegistry. Defaults are
-         * unchanged; consumers with well-conditioned (e.g. Levenberg-Marquardt damped) problems
-         * can set max_it_ref to 0 to skip the per-solve refinement residual computation entirely.
-         */
+        /** @brief Register the iterative-refinement tuning options. */
         void register_options(OptionRegistry &registry)
         {
             registry.register_option("min_it_ref", &LinearSolver::set_min_it_ref, this);
