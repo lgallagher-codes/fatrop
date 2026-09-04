@@ -6,6 +6,7 @@
 #define __fatrop_linear_algebra_linear_solver_hpp__
 
 #include "fatrop/context/context.hpp"
+#include "fatrop/common/options.hpp"
 #include "fatrop/linear_algebra/fwd.hpp"
 #include "fatrop/linear_algebra/linear_solver_return_flags.hpp"
 #include "fatrop/linear_algebra/vector.hpp"
@@ -76,6 +77,19 @@ namespace fatrop
         void set_min_it_ref(const Index &value) { min_it_ref = value; }
         void set_max_it_ref(const Index &value) { max_it_ref = value; }
         void set_iref_tol(const Scalar &value) { tol_ = value; }
+        /**
+         * @brief Register the iterative-refinement tuning options.
+         *
+         * Exposes min_it_ref / max_it_ref / iref_tol through the OptionRegistry. Defaults are
+         * unchanged; consumers with well-conditioned (e.g. Levenberg-Marquardt damped) problems
+         * can set max_it_ref to 0 to skip the per-solve refinement residual computation entirely.
+         */
+        void register_options(OptionRegistry &registry)
+        {
+            registry.register_option("min_it_ref", &LinearSolver::set_min_it_ref, this);
+            registry.register_option("max_it_ref", &LinearSolver::set_max_it_ref, this);
+            registry.register_option("iref_tol", &LinearSolver::set_iref_tol, this);
+        }
         /// Last (final) residual norm = ||A x + b||_inf / max(||b||, 1)
         /// produced by `apply_iterative_refinement`.
         Scalar last_iref_residual() const { return last_residual_; }
